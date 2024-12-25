@@ -80,7 +80,12 @@ async function run() {
       const result = await tutorialsCollection.deleteOne(query)
       res.send(result)
     })
-    
+
+    // get all tutor data api
+    app.get('/all-tutor', async(req, res)=> {
+      const result = await tutorialsCollection.find().toArray()
+      res.send(result)
+    })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
