@@ -103,6 +103,14 @@ async function run() {
       console.log(result)
       res.send(result)
   })
+
+  // get all booked data by specific user
+  app.get('/myBooked-tutor/:email', async(req, res)=>{
+    const email = req.params.email
+    const query = { 'email': email}
+    const result = await bookedTutorCollection.find(query).toArray()
+    res.send(result)
+  })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
