@@ -61,7 +61,16 @@ async function run() {
 
     // updating a single data
     app.put('/update-tutorial/:id', async (req, res)=>{
-
+        const id = req.params.id
+        const tutorialData = req.body
+        const updated = {
+            // $set is a mongodb operator
+            $set: tutorialData,
+        }
+        const query = { _id: new ObjectId(id) }
+        const options = { upsert: true}
+        const result = await tutorialsCollection.updateOne(query, updated, options)
+        res.send(result)
     })
 
     // Send a ping to confirm a successful connection
