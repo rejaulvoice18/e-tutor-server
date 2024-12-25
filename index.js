@@ -8,7 +8,7 @@ const port = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 
 
@@ -35,15 +35,41 @@ async function run() {
     const tutorialsCollection = db.collection('language')
 
     // save tutorial data in db
-    app.post('/add-tutorial', async(req, res)=>{
-        
+    app.post('/add-tutorial', async (req, res)=>{
+        const tutorialData = req.body
+        const result = await tutorialsCollection.insertOne(tutorialData)
+        console.log(result)
+        res.send(result)
     })
+
+    // get all tutorials added by a specific tutor
+    app.get('/tutorials/:email', async (req, res)=>{
+        const email = req.params.email
+        const query = { 'email': email }
+        const result = await tutorialsCollection.find(query).toArray()
+        console.log(result)
+        res.send(result)
+    })
+
+    // get a single tutorial data by id from db to show on update data form
+    app.get('/tutorial/:id', async (req, res)=>{
+        const id = req.params.id
+        const query = { _id: new ObjectId(id) }
+        const result = await tutorialsCollection.findOne(query)
+        res.send(result)
+    })
+
+    // updating a single data
+    app.put('/update-tutorial/:id', async (req, res)=>{
+
+    })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
