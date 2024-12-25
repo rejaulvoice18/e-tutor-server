@@ -33,6 +33,7 @@ async function run() {
     // created database
     const db = client.db('eTutor')
     const tutorialsCollection = db.collection('language')
+    const bookedTutorCollection = db.collection('bookedTutor')
 
     // save tutorial data in db
     app.post('/add-tutorial', async (req, res)=>{
@@ -58,6 +59,14 @@ async function run() {
         const result = await tutorialsCollection.findOne(query)
         res.send(result)
     })
+
+    // get a single tutorial data by id from db to show totor details
+    app.get('/tutor/:id', async (req, res)=>{
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
+      const result = await tutorialsCollection.findOne(query)
+      res.send(result)
+  })
 
     // updating a single data
     app.put('/update-tutorial/:id', async (req, res)=>{
@@ -86,6 +95,14 @@ async function run() {
       const result = await tutorialsCollection.find().toArray()
       res.send(result)
     })
+
+    // save booked Tutor data in db
+    app.post('/book-tutor', async (req, res)=>{
+      const bookedTutorData = req.body
+      const result = await bookedTutorCollection.insertOne(bookedTutorData)
+      console.log(result)
+      res.send(result)
+  })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
