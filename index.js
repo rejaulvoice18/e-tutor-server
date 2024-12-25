@@ -111,6 +111,17 @@ async function run() {
     const result = await bookedTutorCollection.find(query).toArray()
     res.send(result)
   })
+
+  // Increment Review Api
+  app.patch('/review-inc/:id', async(req, res)=>{
+    const id = req.params.id
+    const filter = { _id: new ObjectId(id) }
+    const updated = {
+      $inc: {review: 1}
+    }
+    const result = await tutorialsCollection.updateOne(filter, updated)
+    res.send(result)
+  })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
