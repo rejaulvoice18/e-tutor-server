@@ -12,5 +12,15 @@
         "dest": "index.js",
         "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
       }
-    ]
+    ],
+    "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "https://e-tutor-4ed42.web.app" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,DELETE" }
+      ]
+    }
+  ]
+
   }
