@@ -4,43 +4,23 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 4000;
 
-const corsConfig = {
-  origin: "*",
-  credential: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
-}
+// const corsConfig = {
+//   origin: "*",
+//   credential: true,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE']
+// }
 
 // middleware
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-// Enable CORS
-app.use(cors({
-  origin: 'https://e-tutor-4ed42.web.app', // Replace with your React app's URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // Specify allowed methods
-  credentials: true, // If using cookies/auth headers
-}));
-app.options(" ", cors(corsConfig))
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://e-tutor-4ed42.web.app",
-    "https://e-tutor-4ed42.firebaseapp.com"
-  ],
-  credentials: true,
-}));
-app.use(express.json());
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH, DELETE");
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-//   next();
-// })
-// app.options("/", (req, res) => {
-//   res.setHeader("Access-Control-Allow-Origin", "https://e-tutor-4ed42.web.app");
-//   res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, PATCH, DELETE");
-//   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-//   res.sendStatus(204);
-// });
 
+// Enable CORS
+app.use(cors());
+app.use(express.json());
+// app.use(cors({
+//   origin: 'https://e-tutor-4ed42.web.app', // Replace with your React app's URL
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // Specify allowed methods
+//   credentials: true, // If using cookies/auth headers
+// }));
 
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.omdcb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
