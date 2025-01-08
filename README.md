@@ -1,11 +1,11 @@
 Server-side:
 
-# Equisports-lisboa
+# E-tutor
 
-![Project Screenshot](https://rejaul-karim.netlify.app/assets/port2-DEEykE-s.png) <!-- Replace this link with the actual screenshot of your project -->
+![Project Screenshot](https://677c03012de37e47e62b4b50--rejaul-karim.netlify.app/assets/port1-k4fUNTwp.png) <!-- Replace this link with the actual screenshot of your project -->
 
 ## 🛠 Overview
-This is a server repository for the project Equisports-lisboa. Here I have created API for post request, get request, put request, delete request, and patch request.
+This is a server repository for the project E-tutor. Here I have created API for post request, get request, put request, delete request, and patch request.
 
 
 
