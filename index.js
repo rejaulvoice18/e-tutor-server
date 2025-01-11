@@ -43,6 +43,7 @@ async function run() {
     const db = client.db('eTutor')
     const tutorialsCollection = db.collection('language')
     const bookedTutorCollection = db.collection('bookedTutor')
+    const showOffDataCollection = db.collection('reviewShow')
 
     // save tutorial data in db
     app.post('/add-tutorial', async (req, res) => {
@@ -102,6 +103,11 @@ async function run() {
       const result = await tutorialsCollection.find().toArray()
       res.send(result)
     })
+    // showOff data get api
+    app.get('/show-off', async(req, res)=>{
+      const result = await showOffDataCollection.find().toArray();
+      res.send(result);
+    })
 
     // save booked Tutor data in db
     app.post('/book-tutor', async (req, res) => {
@@ -158,6 +164,8 @@ async function run() {
     app.get('/all-tutorials-search', async(req, res)=>{
       const filter = req.query.filter
       const search = req.query.search
+      const sort = req.query.sort
+      let options = { sort: {price: sort === 'asc' ? 1 : -1 }}
       // let query = {language: filter}
       let query = {language: {
         // using regex we can have data if match with one letter of the whole word in the language value
@@ -167,7 +175,7 @@ async function run() {
       //getting data by category as language
       if(filter) query.language = filter
 
-      const result = await tutorialsCollection.find(query).toArray()
+      const result = await tutorialsCollection.find(query, options).toArray()
       res.send(result)
     })
 
