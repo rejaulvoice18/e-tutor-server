@@ -34,6 +34,8 @@ const client = new MongoClient(uri, {
   }
 });
 
+let tutorialsCollection;
+
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
@@ -41,7 +43,7 @@ async function run() {
 
     // created database
     const db = client.db('eTutor')
-    const tutorialsCollection = db.collection('language')
+    tutorialsCollection = db.collection('language')
     const bookedTutorCollection = db.collection('bookedTutor')
     const showOffDataCollection = db.collection('reviewShow')
 
@@ -104,7 +106,7 @@ async function run() {
       res.send(result)
     })
     // showOff data get api
-    app.get('/show-off', async(req, res)=>{
+    app.get('/show-off', async (req, res) => {
       const result = await showOffDataCollection.find().toArray();
       res.send(result);
     })
@@ -140,28 +142,28 @@ async function run() {
       const result = await tutorialsCollection.aggregate([
         {
           $group: {
-              _id: "$language", // Group by language
-              tutorialPhoto: { $first: "$tutorialPhoto" } // Pick the first photo for each language
+            _id: "$language", // Group by language
+            tutorialPhoto: { $first: "$tutorialPhoto" } // Pick the first photo for each language
           },
-      },
-      {
+        },
+        {
           $project: {
-              _id: 0,
-              language: "$_id",
-              tutorialPhoto: 1
+            _id: 0,
+            language: "$_id",
+            tutorialPhoto: 1
           },
-      },
+        },
       ]).toArray();
       const response = result.map(item => ({
         language: item.language,
         tutorialPhoto: item.tutorialPhoto
-    }));
-    console.log(response);
-    res.send(response); // Send combined languages and photos as a single array of objects
+      }));
+      console.log(response);
+      res.send(response); // Send combined languages and photos as a single array of objects
     })
 
     // get all data for search functionality
-    app.get('/all-tutorials-search', async(req, res)=>{
+    app.get('/all-tutorials-search', async (req, res) => {
       const filter = req.query.filter
       const search = req.query.search
       const sort = req.query.sort
@@ -169,22 +171,24 @@ async function run() {
       const page = parseInt(req.query.page);
       const size = parseInt(req.query.size);
 
-      let options = { sort: {price: sort === 'asc' ? 1 : -1 }}
+      let options = { sort: { price: sort === 'asc' ? 1 : -1 } }
       // let query = {language: filter}
-      let query = {language: {
-        // using regex we can have data if match with one letter of the whole word in the language value
-        // case insensetive korar jonno $options operator use korte hobe
-        $regex: search, $options: 'i'
-      }}
+      let query = {
+        language: {
+          // using regex we can have data if match with one letter of the whole word in the language value
+          // case insensetive korar jonno $options operator use korte hobe
+          $regex: search, $options: 'i'
+        }
+      }
       //getting data by category as language
-      if(filter) query.language = filter
+      if (filter) query.language = filter
 
       const result = await tutorialsCollection.find(query, options)
-      // joto tuku skip korbo ta nicher line a lkhbo
-      .skip(page * size)
-      // R selected page a koto tuku dekhabo ta likhbo nicher moto
-      .limit(size)
-      .toArray()
+        // joto tuku skip korbo ta nicher line a lkhbo
+        .skip(page * size)
+        // R selected page a koto tuku dekhabo ta likhbo nicher moto
+        .limit(size)
+        .toArray()
 
       res.send(result)
     })
@@ -200,9 +204,13 @@ async function run() {
 run().catch(console.dir);
 
 // product counts
-app.get('/productsCount', async(req, res) =>{
-  const count = await tutorialsCollection.estimatedDocumentCount();
-  res.send({count})
+app.get('/productsCount', async (req, res) => {
+  try {
+    const count = await tutorialsCollection.estimatedDocumentCount();
+    res.send({ count });
+  } catch (err) {
+    res.status(500).send({ error: 'Failed to fetch count' });
+  }
 })
 
 
