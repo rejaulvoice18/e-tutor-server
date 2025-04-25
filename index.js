@@ -165,6 +165,10 @@ async function run() {
       const filter = req.query.filter
       const search = req.query.search
       const sort = req.query.sort
+      // pagination
+      const page = parseInt(req.query.page);
+      const size = parseInt(req.query.size);
+
       let options = { sort: {price: sort === 'asc' ? 1 : -1 }}
       // let query = {language: filter}
       let query = {language: {
@@ -175,7 +179,13 @@ async function run() {
       //getting data by category as language
       if(filter) query.language = filter
 
-      const result = await tutorialsCollection.find(query, options).toArray()
+      const result = await tutorialsCollection.find(query, options)
+      // joto tuku skip korbo ta nicher line a lkhbo
+      .skip(page * size)
+      // R selected page a koto tuku dekhabo ta likhbo nicher moto
+      .limit(size)
+      .toArray()
+
       res.send(result)
     })
 
