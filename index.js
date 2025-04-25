@@ -189,6 +189,12 @@ async function run() {
 }
 run().catch(console.dir);
 
+// product counts
+app.get('/productsCount', async(req, res) =>{
+  const count = await tutorialsCollection.estimatedDocumentCount();
+  res.send({count})
+})
+
 
 app.get('/', (req, res) => {
   res.send('e tutor server is running')
